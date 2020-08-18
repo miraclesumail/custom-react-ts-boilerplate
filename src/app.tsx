@@ -1,5 +1,6 @@
 import React, { Component, useEffect } from "react";
 import reactDom, { createPortal } from "react-dom";
+import Test from './components/test'
 
 const Portal: React.FC<any> = ({ children }) => {
   const el = document.createElement("div");
@@ -23,8 +24,9 @@ class App extends Component<any, { name: string }> {
       <div>
         <div>hp\\\p</div>
         <Portal>
-          <span>dkkkd</span>
+          <span>dklllll kkk jkkk</span>
         </Portal>
+        <Test/>
       </div>
     );
   }
