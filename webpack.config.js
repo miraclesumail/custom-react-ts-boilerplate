@@ -1,5 +1,5 @@
 const { resolve, join } = require("path");
-const webpack = require('webpack');
+const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
@@ -63,6 +63,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: "awesome-typescript-loader"
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       }
     ]
   },
@@ -81,9 +85,10 @@ module.exports = {
     // }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      //   filename: "qwe.html",
-      title: "titlelel",
-      template: "./src/main.html"
+      filename: "./index.html",
+      // title: "titlelel",
+      template: "./src/main.html",
+      excludeChunks: ["server"]
     })
   ]
 };

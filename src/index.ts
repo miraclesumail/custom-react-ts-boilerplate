@@ -3,6 +3,7 @@ const config = require("../webpack.config");
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpackHotMiddleware = require("webpack-hot-middleware");
 const express = require("express");
+const path = require("path");
 var bodyParser = require("body-parser");
 const { APIError, HttpStatusCode } = require("./error");
 var app = express();
@@ -10,8 +11,13 @@ var app = express();
 const compiler = webpack(config);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(express.static("/"));
 
-app.use(webpackDevMiddleware(compiler));
+app.use(
+  webpackDevMiddleware(compiler, {
+    writeToDisk: filePath => /\.html$/.test(filePath)
+  })
+);
 app.use(webpackHotMiddleware(compiler));
 
 app.get("/api/data", function(req, res) {
@@ -48,6 +54,20 @@ app.post("/api/save", function(req, res, next) {
   //     msg: "msg",
   //     status: 200
   //   });
+});
+
+app.get("*", (req, res, next) => {
+  compiler.outputFileSystem.readFile(
+    path.join(__dirname, "../dist/index.html"),
+    (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.set("content-type", "text/html");
+      res.send(result);
+      res.end();
+    }
+  );
 });
 
 app.use((err, req, res, next) => {

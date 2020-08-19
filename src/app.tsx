@@ -1,6 +1,9 @@
 import React, { Component, useEffect } from "react";
 import reactDom, { createPortal } from "react-dom";
-import Test from './components/test'
+import { BrowserRouter, Link } from "react-router-dom";
+import Test from "./components/test";
+import Routes from "./routes";
+import 'antd-mobile/dist/antd-mobile.min.css';
 
 const Portal: React.FC<any> = ({ children }) => {
   const el = document.createElement("div");
@@ -21,13 +24,26 @@ class App extends Component<any, { name: string }> {
 
   public render() {
     return (
-      <div>
-        <div>hp\\\p</div>
-        <Portal>
-          <span>dklllll kkk jkkk</span>
-        </Portal>
-        <Test/>
-      </div>
+      <BrowserRouter>
+        <div>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+            <li>
+              <Link to="/topics">Topics</Link>
+            </li>
+          </ul>
+          {/*<Portal>
+            <span>dkllkkk jkkk</span>
+          </Portal>
+          <Test />*/}
+        </div>
+        <Routes />
+      </BrowserRouter>
     );
   }
 }

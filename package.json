@@ -7,6 +7,7 @@
     "webpack": "webpack",
     "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production",
+    "test": "npx ts-node ./src/index.ts",
     "bundle-report": "webpack-bundle-analyzer --port 8123 dist/stats.json"
   },
   "keywords": [],
@@ -24,7 +25,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^3.0.0",
+    "css-loader": "^3.6.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.7.0",
     "postcss-loader": "^3.0.0",
@@ -38,13 +39,16 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "antd-mobile": "^2.3.3",
     "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "inquirer": "^7.3.3",
     "jquery": "^3.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "webpack-dev-middleware": "^3.7.2"
