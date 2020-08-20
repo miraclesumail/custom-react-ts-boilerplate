@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useReducer, createContext } from "react";
 import { Switch, Route } from "react-router-dom";
 import AsyncComponent from "./components/async-component";
+
+export const ReducerContext = createContext(null);
 
 const routes: any[] = [
   {
@@ -29,26 +31,32 @@ const routes: any[] = [
   }
 ];
 
+function reducer(state: { [key: string]: any }, action: any) {
+  switch (action.type) {
+    case "addPerson":
+      return { list: [...state.list, { name: "wo", age: 11 }] };
+    default:
+      throw new Error();
+  }
+}
+
 export default () => {
+  const [state, dispatch] = useReducer(reducer, {
+    list: [{ name: "wo", age: 18 }, { name: "ni", age: 18 }]
+  });
+
   return (
-    <Switch>
-      {routes.map(item => (
-        <Route
-          path={item.path}
-          key={item.name}
-          exact={item.exact}
-          component={item.component}
-        />
-      ))}
-      {/*<Route path="/about">
-        <About />
-      </Route>
-      <Route path="/topics">
-        <Topics />
-      </Route>
-      <Route path="/">
-        <Home />
-      </Route>*/}
-    </Switch>
+    <ReducerContext.Provider value={[state, dispatch ]}>
+      <Switch>
+        {routes.map(item => (
+          <Route
+            path={item.path}
+            key={item.name}
+            exact={item.exact}
+            component={item.component}
+          />
+        ))}
+      </Switch>
+    </ReducerContext.Provider>
   );
 };

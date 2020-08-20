@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ReducerContext } from "../routes";
+
+const renderList = item => (
+  <li key={item.name}>
+    {item.name}--{item.age}
+  </li>
+);
 
 export default () => {
-  return <div>aboutsoo</div>;
+  const [state, disptch] = useContext(ReducerContext);
+  return <div>{state.list && state.list.map(renderList)}</div>;
 };

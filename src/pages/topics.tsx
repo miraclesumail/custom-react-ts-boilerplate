@@ -1,16 +1,27 @@
 import React, { Component } from "react";
 import { Drawer, List, NavBar, Icon } from "antd-mobile";
+import { autobind } from "core-decorators";
+import { Decrator1, debounce } from "@src/utils/decrators";
 import "../css/topic.css";
 
+@Decrator1("what")
 class componentName extends Component {
   state = {
     docked: false
   };
+
   onDock = d => {
     this.setState({
       [d]: !this.state[d]
     });
   };
+
+  @autobind
+  @debounce(3000)
+  public onClick() {
+    console.log("you clicked this");
+  }
+
   render() {
     const sidebar = (
       <List>
@@ -75,7 +86,7 @@ class componentName extends Component {
           sidebar={sidebar}
           docked={this.state.docked}
         >
-          Click upper-left corner
+          <div onClick={this.onClick}> Click upper-left corner</div>
         </Drawer>
       </div>
     );

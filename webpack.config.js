@@ -54,6 +54,7 @@ module.exports = {
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"], // 也可以写成presets:['babel-preset-env']
             plugins: [
+              ["@babel/plugin-proposal-decorators", { legacy: true }],
               "@babel/plugin-proposal-object-rest-spread",
               "@babel/plugin-proposal-class-properties"
             ]
@@ -74,7 +75,10 @@ module.exports = {
     jquery: "jQuery"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"]
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+    alias: {
+      "@src": resolve(__dirname, "./src")
+    }
   },
   plugins: [
     new CleanWebpackPlugin(),
