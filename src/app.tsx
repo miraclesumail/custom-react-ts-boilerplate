@@ -3,7 +3,7 @@ import reactDom, { createPortal } from "react-dom";
 import { BrowserRouter, Link } from "react-router-dom";
 import Test from "./components/test";
 import Routes from "./routes";
-import 'antd-mobile/dist/antd-mobile.min.css';
+import "antd-mobile/dist/antd-mobile.min.css";
 
 const Portal: React.FC<any> = ({ children }) => {
   const el = document.createElement("div");
@@ -41,6 +41,7 @@ class App extends Component<any, { name: string }> {
             <span>dkllkkk jkkk</span>
           </Portal>
           <Test />*/}
+          <Test />
         </div>
         <Routes />
       </BrowserRouter>

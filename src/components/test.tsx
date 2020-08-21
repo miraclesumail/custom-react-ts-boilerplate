@@ -1,5 +1,6 @@
 import React, { Component, useEffect } from "react";
 import reactDom from "react-dom";
+import api from "@src/utils/api-request";
 
 const Portal: React.FC<any> = ({ children }) => {
   const el = document.createElement("div");
@@ -11,14 +12,11 @@ const Portal: React.FC<any> = ({ children }) => {
     // })();
 
     (async function getData() {
-      const data = await fetch("/api/save", {
+      const data = await api.request("/api/save", "post", {
         method: "post",
-        body: JSON.stringify({ name: "qqqq", age: 18 }),
-        headers: {
-          "content-type": "application/json"
-        }
+        body: JSON.stringify({ name: "qqqq", age: 18 })
       });
-      console.log(await data.json());
+      console.log(data);
     })();
   }, []);
 

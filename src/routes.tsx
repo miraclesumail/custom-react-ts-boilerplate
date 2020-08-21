@@ -1,7 +1,7 @@
 import React, { useReducer, createContext } from "react";
 import { Switch, Route } from "react-router-dom";
 import AsyncComponent from "./components/async-component";
-
+import RouteGuard from "@src/utils/route-guard";
 export const ReducerContext = createContext(null);
 
 const routes: any[] = [
@@ -10,23 +10,34 @@ const routes: any[] = [
     path: "/",
     exact: true,
     component: AsyncComponent(() =>
-      import(/* webpackChunkName: "Home" */ "./pages/home")
-    )
+      import(/* webpackChunkName: "Login" */ "./pages/home")
+    ),
+    needLogin: true
   },
   {
     name: "about",
     path: "/about",
     exact: true,
     component: AsyncComponent(() =>
-      import(/* webpackChunkName: "About" */ "./pages/about")
-    )
+      import(/* webpackChunkName: "Login" */ "./pages/about")
+    ),
+    needLogin: true
   },
   {
     name: "topics",
     path: "/topics",
     exact: true,
     component: AsyncComponent(() =>
-      import(/* webpackChunkName: "Topic" */ "./pages/topics")
+      import(/* webpackChunkName: "Login" */ "./pages/topics")
+    ),
+    needLogin: true
+  },
+  {
+    name: "login",
+    path: "/login",
+    exact: true,
+    component: AsyncComponent(() =>
+      import(/* webpackChunkName: "Login" */ "./pages/login")
     )
   }
 ];
@@ -46,14 +57,23 @@ export default () => {
   });
 
   return (
-    <ReducerContext.Provider value={[state, dispatch ]}>
+    <ReducerContext.Provider value={[state, dispatch]}>
       <Switch>
         {routes.map(item => (
           <Route
             path={item.path}
             key={item.name}
             exact={item.exact}
-            component={item.component}
+            render={props =>
+              item.needLogin ? (
+                <RouteGuard
+                  needLogin={true}
+                  renderer={item.component}
+                  {...props}
+                />
+              ) : (
+                <item.component {...props} />
+              )}
           />
         ))}
       </Switch>

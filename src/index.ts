@@ -5,7 +5,9 @@ var webpackHotMiddleware = require("webpack-hot-middleware");
 const express = require("express");
 const path = require("path");
 var bodyParser = require("body-parser");
+import { verifyToken } from "../server/middlewares";
 const { APIError, HttpStatusCode } = require("./error");
+import jwt from "jsonwebtoken";
 var app = express();
 
 const compiler = webpack(config);
@@ -20,21 +22,23 @@ app.use(
 );
 app.use(webpackHotMiddleware(compiler));
 
-app.get("/api/data", function(req, res) {
-  res.json({
-    msg: "msg",
-    status: 200
-  });
-});
-
 const addUser = () => {
   throw new APIError(
     "NOT FOUNDqqqq",
     HttpStatusCode.NOT_FOUND,
-    "detailedsssss  exeeeplanation",
+    "detailedsssss  exeeeplana",
     true
   );
 };
+
+app.use("/api", verifyToken);
+
+app.post("/login", function(req, res, next) {
+  console.log(req.body, "req.body");
+  const token = jwt.sign({ name: req.body.name }, "bear", { expiresIn: 60 });
+  res.status(200).json({ auth: true, token: token });
+});
+
 app.post("/api/save", function(req, res, next) {
   // next(
   //   new APIError(
@@ -47,7 +51,6 @@ app.post("/api/save", function(req, res, next) {
   try {
     addUser();
   } catch (error) {
-    console.log(error, "catch error");
     return next(error);
   }
   //   res.json({
@@ -71,8 +74,6 @@ app.get("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log("err----");
-  console.log(err);
   res.status(err.httpCode).json({
     err: err.name
   });
