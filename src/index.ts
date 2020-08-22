@@ -5,11 +5,37 @@ var webpackHotMiddleware = require("webpack-hot-middleware");
 const express = require("express");
 const path = require("path");
 var bodyParser = require("body-parser");
+import redis from "redis";
 import { verifyToken } from "../server/middlewares";
+import CommonRoute from "../server/routes/common";
 const { APIError, HttpStatusCode } = require("./error");
 import jwt from "jsonwebtoken";
-var app = express();
 
+// redis 掉线重连策略
+function retry_strategy(options) {
+  if (options.error && options.error.code === "ECONNREFUSED") {
+    // End reconnecting on a specific error and flush all commands with
+    // a individual error
+    return new Error("The server refused the connection");
+  }
+  if (options.total_retry_time > 1000 * 60 * 60) {
+    // End reconnecting after a specific timeout and flush all commands
+    // with a individual error
+    return new Error("Retry time exhausted");
+  }
+  if (options.attempt > 10) {
+    // End reconnecting with built in error
+    return undefined;
+  }
+  // reconnect after
+  return Math.min(options.attempt * 100, 3000);
+}
+
+export const redisClient = redis.createClient(6379, "127.0.0.1", {
+  retry_strategy
+});
+
+var app = express();
 const compiler = webpack(config);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,6 +58,7 @@ const addUser = () => {
 };
 
 app.use("/api", verifyToken);
+app.use("/common", CommonRoute);
 
 app.post("/login", function(req, res, next) {
   console.log(req.body, "req.body");

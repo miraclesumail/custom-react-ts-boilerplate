@@ -20,3 +20,23 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     }
   });
 }
+
+export function ratesLimit(key, time) {
+  return async (req: any, res, next) => {
+    const { get, set, expire, incr } = req.redisClient;
+    const count = await get(key);
+    console.log(count, "count");
+
+    if (count === null) {
+      await set(key, 1);
+      await expire(key, 20);
+    } else {
+      if (count >= 20) {
+        return res.json({ msg: "request too frequently" });
+      } else {
+        await incr("count");
+      }
+    }
+    next();
+  };
+}
