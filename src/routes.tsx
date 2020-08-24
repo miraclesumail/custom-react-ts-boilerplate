@@ -39,6 +39,14 @@ const routes: any[] = [
     component: AsyncComponent(() =>
       import(/* webpackChunkName: "Login" */ "./pages/login")
     )
+  },
+  {
+    name: "sweeper",
+    path: "/sweeper",
+    exact: true,
+    component: AsyncComponent(() =>
+      import(/* webpackChunkName: "Login" */ "./pages/sweeper")
+    )
   }
 ];
 

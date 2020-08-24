@@ -1,0 +1,22 @@
+.grid {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #dcd6bc;
+  margin-left: 20px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  border: solid 5px;
+  border-color: #f5f3eb #bab7a9 #bab7a9 #fff9db;
+  text-align: center;
+  line-height: 40px;
+}
+
+.cell.active {
+  background: grey;
+}

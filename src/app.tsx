@@ -36,12 +36,14 @@ class App extends Component<any, { name: string }> {
             <li>
               <Link to="/topics">Topics</Link>
             </li>
+            <li>
+              <Link to="/sweeper">Sweeper</Link>
+            </li>
           </ul>
           {/*<Portal>
             <span>dkllkkk jkkk</span>
           </Portal>
           <Test />*/}
-          <Test />
         </div>
         <Routes />
       </BrowserRouter>
