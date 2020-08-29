@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../css/sweeper.css";
 import Mine from "@src/components/mine";
+import { memorize } from "@src/utils/tools";
 
 const bombsAmount = 20;
 
@@ -85,9 +86,11 @@ function getFinalData(axisData) {
   return data;
 }
 
+const cacheFn = memorize(getStaticCount);
+
 function getRecursiveData(list, index, indexArr = []) {
   console.log(index, "indexindexxss");
-  const includedArr = getStaticCount(index);
+  const includedArr = cacheFn(index);
 
   const filteredArr = includedArr.filter(
     item => !list[item].isBomb && !list[item].bombCount
@@ -133,7 +136,7 @@ class Sweeper extends Component {
       const checkedArrs = Array.from(
         new Set(
           chooseIndexArr.reduce((prev, next) => {
-            const data = prev.concat(getStaticCount(next));
+            const data = prev.concat(cacheFn(next));
             return data;
           }, [])
         )

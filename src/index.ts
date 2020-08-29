@@ -8,6 +8,7 @@ var bodyParser = require("body-parser");
 import redis from "redis";
 import { verifyToken } from "../server/middlewares";
 import CommonRoute from "../server/routes/common";
+import { logger } from "../server/logs/logger";
 const { APIError, HttpStatusCode } = require("./error");
 import jwt from "jsonwebtoken";
 
@@ -62,7 +63,7 @@ app.use("/common", CommonRoute);
 
 app.post("/login", function(req, res, next) {
   console.log(req.body, "req.body");
-  const token = jwt.sign({ name: req.body.name }, "bear", { expiresIn: 60 });
+  const token = jwt.sign({ name: req.body.name }, "bear", { expiresIn: 6000 });
   res.status(200).json({ auth: true, token: token });
 });
 
@@ -101,9 +102,12 @@ app.get("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(err.httpCode).json({
-    err: err.name
-  });
+  if (err) {
+    logger.error(err);
+    res.status(err.httpCode).json({
+      err: err.name
+    });
+  }
 });
 
 app.listen(3333, () => console.log("start service"));
