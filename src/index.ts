@@ -11,6 +11,7 @@ import CommonRoute from "../server/routes/common";
 import { logger } from "../server/logs/logger";
 const { APIError, HttpStatusCode } = require("./error");
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 // redis 掉线重连策略
 function retry_strategy(options) {
@@ -33,7 +34,7 @@ function retry_strategy(options) {
 }
 
 export const redisClient = redis.createClient(6379, "127.0.0.1", {
-  retry_strategy
+  retry_strategy,
 });
 
 var app = express();
@@ -44,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(
   webpackDevMiddleware(compiler, {
-    writeToDisk: filePath => /\.html$/.test(filePath)
+    writeToDisk: (filePath) => /\.html$/.test(filePath),
   })
 );
 app.use(webpackHotMiddleware(compiler));
@@ -61,13 +62,13 @@ const addUser = () => {
 app.use("/api", verifyToken);
 app.use("/common", CommonRoute);
 
-app.post("/login", function(req, res, next) {
+app.post("/login", function (req, res, next) {
   console.log(req.body, "req.body");
   const token = jwt.sign({ name: req.body.name }, "bear", { expiresIn: 6000 });
   res.status(200).json({ auth: true, token: token });
 });
 
-app.post("/api/save", function(req, res, next) {
+app.post("/api/save", function (req, res, next) {
   // next(
   //   new APIError(
   //     "NOT FOUNDqqqq",
@@ -105,9 +106,17 @@ app.use((err, req, res, next) => {
   if (err) {
     logger.error(err);
     res.status(err.httpCode).json({
-      err: err.name
+      err: err.name,
     });
   }
 });
 
-app.listen(3333, () => console.log("start service"));
+async function bootstrap() {
+  await mongoose.connect("mongodb://localhost:27017/laravel", {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+  });
+  app.listen(3333, () => console.log("start service11"));
+}
+
+bootstrap();
