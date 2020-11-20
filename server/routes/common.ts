@@ -34,4 +34,10 @@ router.get("/weather", ratesLimit("count", 20), async (req, res) => {
   //   });
 });
 
+router.post("/getTodo", async (req, res) => {
+  const { task } = req.body;
+  const todo = await Todo.findOne({ task }).exec();
+  res.json({ msg: "ok", todo });
+});
+
 export default router;

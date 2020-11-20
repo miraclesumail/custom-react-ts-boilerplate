@@ -1,6 +1,7 @@
 import React from "react";
 import animateComp from "@src/components/animate-component";
 import "@src/css/home.css";
+import api from "@src/utils/api-request";
 
 const Test: React.FunctionComponent<any> = ({ forwardRef }) => {
   return <div ref={forwardRef} className="block" />;
@@ -16,11 +17,11 @@ const animateOptions = {
     { translateX: 250 },
     { translateY: 40 },
     { translateX: 0 },
-    { translateY: 0 }
+    { translateY: 0 },
   ],
   duration: 4000,
   easing: "easeOutElastic(1, .8)",
-  loop: true
+  loop: true,
 };
 
 const Ele = animateComp(
@@ -56,6 +57,16 @@ export default class App extends React.Component {
 
   componentDidMount() {
     console.log("this is popupRef", this.popupRef.current);
+    api
+      .request("/common/getTodo", "post", {
+        body: JSON.stringify({
+          task: "sleeping",
+        }),
+        timeOut: 20,
+      })
+      .then((res: any) => {
+        console.log(res);
+      });
   }
 
   render() {
